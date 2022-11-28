@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- MapperインターフェイスとMapper.xmlを紐づける -->
+<mapper namespace="jp.co.internous.topaz.model.mapper.MstProductMapper">
+
+	<!-- カテゴリとキーワード（商品名）を条件に商品情報を取得、
+	ID順に並べ替えるようMstProductMapperに指示 -->
+	<select id="findByCategoryAndProductName" resultType="jp.co.internous.topaz.model.domain.MstProduct">
+		SELECT * FROM mst_product 
+		WHERE category_id = #{category} AND
+		<foreach item="keyword" collection="keywords" open="(" close=")" separator="OR">
+			(product_name LIKE '%${keyword}%') 
+		</foreach>
+		ORDER BY id;
+	</select>
+	
+	<!-- キーワード（商品名）を条件に商品情報を取得、商品ID順に並べ替えるように指示 -->
+	<select id="findByProductName" resultType="jp.co.internous.topaz.model.domain.MstProduct">
+		SELECT * FROM mst_product WHERE 
+		<foreach item="keyword" collection="keywords" open="" close="" separator="OR">
+			(product_name LIKE '%${keyword}%')
+		</foreach>
+		ORDER BY id;	
+	</select>
+</mapper>
